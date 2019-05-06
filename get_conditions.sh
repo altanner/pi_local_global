@@ -5,6 +5,7 @@ curl wttr.in/bristol?0T > /home/pi/weather/wttr_weather
 curl wttr.in/moon?T > /home/pi/weather/wttr_moon
 curl https://www.timeanddate.com/astronomy/uk/bristol > /home/pi/weather/tnd_astro
 curl https://www.timeanddate.com/weather/uk/bristol > /home/pi/weather/tnd_weather
+curl https://www.metoffice.gov.uk/weather/warnings-and-advice/uk-storm-centre/index > /home/pi/weather/storms
 
 ## parse out specifics
 CONDITIONS=$(cat /home/pi/weather/wttr_weather | awk 'NR==3' | cut -c 16-);
@@ -22,6 +23,11 @@ MOONPHASE=$(cat /home/pi/weather/wttr_moon | awk 'NR==10' | awk '{print $(NF-2),
 MOONRISE=$(cat /home/pi/weather/tnd_astro | grep -o -P "Moonrise Today: </span><span class=three>.{0,5}" | grep -o ".....$");
 MOONSET=$(cat /home/pi/weather/tnd_astro | grep -o -P "Moonset Today: </span><span class=three>.{0,5}" | grep -o ".....$");
 MOONPERCENT=$(cat /home/pi/weather/tnd_astro | grep -o -P "Moon: <span id=cur-moon.{0,13}" | grep -o ".....$" | sed "s/>//");
+STORMNAME=$(tac storms | grep -m 1 -B5 "/weather/warnings-and-advice/uk-storm-centre/storm-" | head -1 | sed "s/<*.td>//" | sed "s/[[:space:]]*//" | sed "s/<.td>//");
+CO2=$(cat /home/pi/weather/co2 | grep "parts per million" | grep -m 1 -o -P "<strong>.{0,6}" | grep -o "......$");
+QUAKELOC1=$(tac quakes | grep -m 1 -B3 today | head -2 | tail -1 | sed -e 's/.*">\(.*\)<.*/\1/');
+QUAKELOC2=$(tac quakes | grep -m 1 -B3 today | head -1 | sed -e 's/.*">\(.*\)<.*/\1/');
+QUAKEMM=$(tac quakes | grep -m 1 today | sed -e 's/.*">\(.*\)<.*/\1/');
 
 ## if dew point is negative, change variable to frost point
 DEWPOINT="Dew blossom";
@@ -52,6 +58,10 @@ echo "$DEWPOINT :  $DEW     " >> /home/pi/weather/conditions;
 echo "Sunsoar :  $SUNRISE, Sunsquirrel :  $SUNSET     " >> /home/pi/weather/conditions;
 echo "Moonmove : $MOONRISE, Moonsnooze :  $MOONSET     " >> /home/pi/weather/conditions;
 echo "Lunar faction :  $MOONPHASE ($MOONPERCENT)     " >> /home/pi/weather/conditions;
+echo "Future storm :  $STORMNAME    " >> /home/pi/weather/conditions;
+echo "Wobblemax : $QUAKEMM MM, $QUAKELOC1, $QUAKELOC2     " >> /home/pi/weather/conditions;
+echo "Doom sum : $CO2 ppm     " >> /home/pi/weather/conditions;
+
 sed -i "s/°/'/" /home/pi/weather/conditions;
 sed -i "s/Sky move :  ./Sky move : /" /home/pi/weather/conditions;
 sed -i "s/<//g" /home/pi/weather/conditions;
