@@ -47,7 +47,7 @@ if [[ $VISI == "10 km" ]]; then
 fi
 
 ## create conditions file
-echo "Sky see :  $CONDITIONS     " > /home/pi/weather/conditions;
+echo "Up see :  $CONDITIONS     " > /home/pi/weather/conditions;
 echo "Air feel :  $TEMP    " >> /home/pi/weather/conditions;
 echo "Sky move :  $WIND from $WINDDIR°    " >> /home/pi/weather/conditions;
 echo "Airiness :  $PRES    " >>/home/pi/weather/conditions;
@@ -56,10 +56,10 @@ echo "$DROPLETS :  $PRECIP    " >> /home/pi/weather/conditions;
 echo "Wettitude :  $HUM    " >> /home/pi/weather/conditions;
 echo "$DEWPOINT :  $DEW     " >> /home/pi/weather/conditions;
 echo "Sunsoar :  $SUNRISE, Sunsquirrel :  $SUNSET     " >> /home/pi/weather/conditions;
-echo "Moonmove : $MOONRISE, Moonsnooze :  $MOONSET     " >> /home/pi/weather/conditions;
+echo "Moonloom : $MOONRISE, Moonsnooze :  $MOONSET     " >> /home/pi/weather/conditions;
 echo "Lunar faction :  $MOONPHASE ($MOONPERCENT)     " >> /home/pi/weather/conditions;
 echo "Future storm :  $STORMNAME    " >> /home/pi/weather/conditions;
-echo "Wobblemax : $QUAKEMM MM, $QUAKELOC1, $QUAKELOC2     " >> /home/pi/weather/conditions;
+echo "Wobblemax : $QUAKEMM M, $QUAKELOC1, $QUAKELOC2     " >> /home/pi/weather/conditions;
 echo "Doom sum : $CO2 ppm     " >> /home/pi/weather/conditions;
 
 sed -i "s/°/'/" /home/pi/weather/conditions;
